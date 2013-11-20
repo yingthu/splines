@@ -1,0 +1,131 @@
+translation: [-3.0, -3.0, -3.0]
+rotation: [0.0, 0.0, 0.0]
+name: Root
+children:
+- translation: [4.0, 10.0, 0.0]
+  rotation: [0.0, 0.0, 0.0]
+  name: Light
+  intensity: [1.0, 1.0, 1.0, 1.0]
+  children: []
+  type: LightNode
+  ambient: [1.0, 1.0, 1.0, 1.0]
+  scaling: [1.0, 1.0, 1.0]
+- translation: [0.0, 0.0, 0.0]
+  rotation: [0.0, 0.0, 0.0]
+  name: Cube
+  children:
+  - translation: [-0.2, 10.0, 0.0]
+    rotation: [0.0, 0.0, 0.0]
+    name: Sphere
+    children: []
+    type: MeshNode
+    material:
+      specular: [0.4, 0.4, 1.0, 1.0]
+      diffuse: [1.0, 0.2, 0.1, 1.0]
+      shininess: 40.0
+      type: PhongMaterial
+      ambient: [0.05, 0.05, 0.05, 1.0]
+    mesh: {type: Sphere}
+    scaling: [0.2, 10.0, 0.2]
+  - translation: [-0.48, 6.0, 0.28]
+    rotation: [0.0, 45.0, 0.0]
+    name: Cube
+    children: []
+    type: MeshNode
+    material:
+      specular: [1.0, 1.0, 1.0, 1.0]
+      diffuse: [0.3, 0.3, 0.8, 1.0]
+      shininess: 40.0
+      type: PhongMaterial
+      ambient: [0.05, 0.05, 0.05, 1.0]
+    mesh: {type: Cube}
+    scaling: [0.2, 5.0, 0.2]
+  - translation: [-0.43, 8.0, -0.2]
+    rotation: [0.0, -45.0, 0.0]
+    name: Cube
+    children:
+    - translation: [0.0, 1.2, -0.7]
+      rotation: [0.0, 0.0, 0.0]
+      name: Teapot
+      children: []
+      type: MeshNode
+      material:
+        specular: [1.0, 1.0, 1.0, 1.0]
+        diffuse: [0.9, 0.7, 0.5, 1.0]
+        shininess: 40.0
+        type: PhongMaterial
+        ambient: [0.05, 0.05, 0.05, 1.0]
+      mesh: {type: Teapot}
+      scaling: [0.6, 0.5, 0.2]
+    type: MeshNode
+    material:
+      specular: [1.0, 1.0, 1.0, 1.0]
+      diffuse: [0.6, 0.3, 0.0, 1.0]
+      shininess: 40.0
+      type: PhongMaterial
+      ambient: [0.05, 0.05, 0.05, 1.0]
+    mesh: {type: Cube}
+    scaling: [0.1, 7.0, 0.3]
+  - translation: [0.8, 2.6, -0.7]
+    rotation: [90.0, 0.0, 0.0]
+    name: Torus
+    children:
+    - translation: [0.0, 5.0, 0.0]
+      rotation: [0.0, 0.0, 0.0]
+      name: Torus
+      children: []
+      type: MeshNode
+      material:
+        specular: [1.0, 1.0, 1.0, 1.0]
+        diffuse: [0.0, 0.9, 0.0, 1.0]
+        shininess: 40.0
+        type: PhongMaterial
+        ambient: [0.05, 0.05, 0.05, 1.0]
+      mesh: {type: Torus}
+      scaling: [1.0, 1.0, 1.0]
+    - translation: [0.0, 10.0, 0.0]
+      rotation: [0.0, 0.0, 0.0]
+      name: Torus
+      children: []
+      type: MeshNode
+      material:
+        specular: [1.0, 1.0, 1.0, 1.0]
+        diffuse: [0.0, 0.0, 0.9, 1.0]
+        shininess: 40.0
+        type: PhongMaterial
+        ambient: [0.05, 0.05, 0.05, 1.0]
+      mesh: {type: Torus}
+      scaling: [1.0, 1.0, 1.0]
+    type: MeshNode
+    material:
+      specular: [1.0, 1.0, 1.0, 1.0]
+      diffuse: [0.9, 0.0, 0.0, 1.0]
+      shininess: 40.0
+      type: PhongMaterial
+      ambient: [0.05, 0.05, 0.05, 1.0]
+    mesh: {type: Torus}
+    scaling: [0.1, 0.1, 7.0]
+  type: MeshNode
+  material:
+    specular: [0.0, 0.0, 0.0, 1.0]
+    diffuse: [0.0, 0.1, 0.0, 1.0]
+    shininess: 1.0
+    type: PhongMaterial
+    ambient: [0.05, 0.05, 0.05, 1.0]
+  mesh: {type: Cube}
+  scaling: [5.0, 0.1, 5.0]
+- translation: [0.0, -0.05, 0.0]
+  rotation: [0.0, 0.0, 0.0]
+  name: Cylinder
+  children: []
+  type: MeshNode
+  material:
+    specular: [1.0, 1.0, 1.0, 1.0]
+    diffuse: [0.9, 0.9, 0.9, 1.0]
+    shininess: 40.0
+    type: PhongMaterial
+    ambient: [0.05, 0.05, 0.05, 1.0]
+  mesh: {type: Cylinder}
+  scaling: [7.1, 0.05, 7.1]
+type: SceneNode
+scaling: [0.5, 0.5, 0.5]

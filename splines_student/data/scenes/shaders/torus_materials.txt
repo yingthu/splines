@@ -1,0 +1,71 @@
+translation: [0.0, 0.0, 0.0]
+rotation: [0.0, 0.0, 0.0]
+name: Root
+children:
+- translation: [5.0, 5.0, 5.0, 1.0]
+  rotation: [0.0, 0.0, 0.0]
+  specular: [1.0, 1.0, 1.0, 1.0]
+  name: Light
+  intensity: [1.0, 1.0, 1.0, 1.0]
+  children: []
+  type: LightNode
+  ambient: [1.0, 1.0, 1.0, 1.0]
+  scaling: [1.0, 1.0, 1.0]
+- translation: [-2.1, 0.0, 0.0]
+  rotation: [0.0, 0.0, 0.0]
+  name: Torus
+  children: []
+  type: MeshNode
+  material: {type: GreenMaterial}
+  mesh: {type: Torus}
+  scaling: [1.0, 1.0, 1.0]
+- translation: [0.0, 0.0, 0.0]
+  rotation: [0.0, 0.0, 0.0]
+  name: Torus
+  children: []
+  type: MeshNode
+  material: {type: NormalMaterial}
+  mesh: {type: Torus}
+  scaling: [1.0, 1.0, 1.0]
+- translation: [2.1, 0.0, 0.0]
+  rotation: [0.0, 0.0, 0.0]
+  name: Torus
+  children: []
+  type: MeshNode
+  material:
+    specular: [0.0, 0.0, 0.0, 1.0]
+    diffuse: [0.9, 0.9, 0.0, 1.0]
+    shininess: 0.0
+    type: ToonMaterial
+    displaceScale: 0.05
+    ambient: [0.0, 0.0, 0.0, 1.0]
+  mesh: {type: Torus}
+  scaling: [1.0, 1.0, 1.0]
+- translation: [-1.1, 1.8, 0.0]
+  rotation: [0.0, 0.0, 0.0]
+  name: Torus
+  children: []
+  type: MeshNode
+  material:
+    specular: [1.0, 1.0, 1.0, 1.0]
+    diffuse: [0.0, 0.0, 0.9, 1.0]
+    shininess: 40.0
+    type: PhongMaterial
+    ambient: [0.05, 0.05, 0.05, 1.0]
+  mesh: {type: Torus}
+  scaling: [1.0, 1.0, 1.0]
+- translation: [1.1, 1.8, 0.0]
+  rotation: [0.0, 0.0, 0.0]
+  name: Torus
+  children: []
+  type: MeshNode
+  material:
+    specular: [1.0, 1.0, 1.0, 1.0]
+    diffuse: [0.0, 0.0, 0.9, 1.0]
+    shininess: 40.0
+    type: PhongMaterial
+    ambient: [0.05, 0.05, 0.05, 1.0]
+  mesh: {type: Torus}
+  scaling: [1.0, 1.0, 1.0]
+type: SceneNode
+scaling: [1.0, 1.0, 1.0]

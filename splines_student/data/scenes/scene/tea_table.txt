@@ -1,0 +1,100 @@
+translation: [0.0, 0.0, 0.0]
+rotation: [0.0, 0.0, 0.0]
+name: Root
+children:
+- translation: [-5.0, 5.0, 5.0]
+  rotation: [0.0, 0.0, 0.0]
+  name: Light
+  intensity: [1.0, 0.8, 0.7, 1.0]
+  children: []
+  type: LightNode
+  ambient: [0.5, 0.5, 1.0, 1.0]
+  scaling: [1.0, 1.0, 1.0]
+- translation: [-1.0, 0.0, -1.0]
+  rotation: [0.0, 0.0, 0.0]
+  name: Cylinder
+  children: []
+  type: MeshNode
+  material:
+    specular: [1.0, 1.0, 1.0, 1.0]
+    diffuse: [0.8, 0.4, 0.15, 1.0]
+    shininess: 40.0
+    type: PhongMaterial
+    ambient: [0.05, 0.05, 0.05, 1.0]
+  mesh: {type: Cylinder}
+  scaling: [0.2, 1.0, 0.2]
+- translation: [1.0, 0.0, 1.0]
+  rotation: [0.0, 0.0, 0.0]
+  name: Cylinder
+  children: []
+  type: MeshNode
+  material:
+    specular: [1.0, 1.0, 1.0, 1.0]
+    diffuse: [0.8, 0.4, 0.15, 1.0]
+    shininess: 40.0
+    type: PhongMaterial
+    ambient: [0.05, 0.05, 0.05, 1.0]
+  mesh: {type: Cylinder}
+  scaling: [0.2, 1.0, 0.2]
+- translation: [1.0, 0.0, -1.0]
+  rotation: [0.0, 0.0, 0.0]
+  name: Cylinder
+  children: []
+  type: MeshNode
+  material:
+    specular: [1.0, 1.0, 1.0, 1.0]
+    diffuse: [0.8, 0.4, 0.15, 1.0]
+    shininess: 40.0
+    type: PhongMaterial
+    ambient: [0.05, 0.05, 0.05, 1.0]
+  mesh: {type: Cylinder}
+  scaling: [0.2, 1.0, 0.2]
+- translation: [-1.0, 0.0, 1.0]
+  rotation: [0.0, 0.0, 0.0]
+  name: Cylinder
+  children: []
+  type: MeshNode
+  material:
+    specular: [1.0, 1.0, 1.0, 1.0]
+    diffuse: [0.8, 0.4, 0.15, 1.0]
+    shininess: 40.0
+    type: PhongMaterial
+    ambient: [0.05, 0.05, 0.05, 1.0]
+  mesh: {type: Cylinder}
+  scaling: [0.2, 1.0, 0.2]
+- translation: [0.0, 1.0, 0.0]
+  rotation: [0.0, 0.0, 0.0]
+  name: Cube
+  children:
+  - translation: [0.5, 3.8, 0.0]
+    rotation: [0.0, 33.0, 0.0]
+    name: Teapot
+    children: []
+    type: MeshNode
+    material:
+      specular: [1.0, 1.0, 1.0, 1.0]
+      diffuse: [0.7, 0.7, 0.3, 1.0]
+      shininess: 40.0
+      type: PhongMaterial
+      ambient: [0.05, 0.05, 0.05, 1.0]
+    mesh: {type: Teapot}
+    scaling: [0.5, 6.0, 0.5]
+  type: MeshNode
+  material:
+    specular: [1.0, 1.0, 1.0, 1.0]
+    diffuse: [0.8, 0.4, 0.15, 1.0]
+    shininess: 40.0
+    type: PhongMaterial
+    ambient: [0.05, 0.05, 0.05, 1.0]
+  mesh: {type: Cube}
+  scaling: [1.3, 0.1, 1.3]
+- translation: [5.0, 2.0, 0.0]
+  rotation: [0.0, 0.0, 0.0]
+  name: Light
+  intensity: [0.1, 0.25, 0.8, 1.0]
+  children: []
+  type: LightNode
+  ambient: [0.5, 0.5, 1.0, 1.0]
+  scaling: [1.0, 1.0, 1.0]
+type: SceneNode
+scaling: [1.0, 1.0, 1.0]
