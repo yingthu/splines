@@ -79,6 +79,10 @@ public class BSpline extends DiscreteCurve {
     public void tessellate_bezier(Vector2f cp[], float epsilon, ArrayList<Vector2f> outPoints, ArrayList<Vector2f> outDerivs) {
     	 	
     	// TODO (Splines P1): Tesselate a bezier segment
+    	    System.out.println("1 called");
+        bezier_helper(cp, epsilon, outPoints, outDerivs, 0);
+        outPoints.add(0, cp[0]);
+	    /*
     		Vector2f p10 = new Vector2f();
     		Vector2f p11 = new Vector2f();
     		Vector2f p12 = new Vector2f();
@@ -95,9 +99,56 @@ public class BSpline extends DiscreteCurve {
     		Vector2f deriv30 = new Vector2f();
     		deriv30.sub(cp[2], cp[1]);
     		outDerivs.add(deriv30);
+    		*/
     }
     
-    
+    public ArrayList<Vector2f> bezier_helper(Vector2f cp[], float epsilon, ArrayList<Vector2f> outPoints, ArrayList<Vector2f> outDerivs, int level) {
+    		float angle1 = 10, angle2 = 10;
+    		Vector2f p10 = new Vector2f();
+    		Vector2f p11 = new Vector2f();
+    		Vector2f p12 = new Vector2f();
+    		Vector2f p20 = new Vector2f();
+    		Vector2f p21 = new Vector2f();
+    		Vector2f p30 = new Vector2f();
+    		p10.interpolate(cp[0], cp[1], 0.5f);
+    		p11.interpolate(cp[1], cp[2], 0.5f);
+    		p12.interpolate(cp[2], cp[3], 0.5f);
+    		p20.interpolate(p10, p11, 0.5f);
+    		p21.interpolate(p11, p12, 0.5f);
+    		p30.interpolate(p20, p21, 0.5f);
+    		Vector2f deriv30 = new Vector2f();
+    		deriv30.sub(cp[2], cp[1]);
+    		if (!((angle1 < epsilon/2.0f && angle2 < epsilon/2.0f) || level > 9)) {
+    			// left
+    		    Vector2f cp_left[] = new Vector2f[4];
+    		    cp_left[0] = cp[0];
+    		    cp_left[1] = p10;
+    		    cp_left[2] = p20;
+    		    cp_left[3] = p30;
+    		    ArrayList<Vector2f>left_result = bezier_helper(cp_left, epsilon, outPoints, outDerivs, level+1);
+    			outPoints.add(left_result.get(0));
+    			outDerivs.add(left_result.get(1));
+    			
+    			// right
+    			Vector2f cp_right[] = new Vector2f[4];
+    		    cp_right[0] = p30;
+    		    cp_right[1] = p21;
+    		    cp_right[2] = p12;
+    		    cp_right[3] = cp[3];
+    		    ArrayList<Vector2f>right_result = bezier_helper(cp_left, epsilon, outPoints, outDerivs, level+1);
+    			outPoints.add(right_result.get(0));
+    			outDerivs.add(right_result.get(1));
+    			
+    			// self
+    			outPoints.add(p30);
+    			outDerivs.add(deriv30);
+    		}
+    		
+    		ArrayList<Vector2f> resultArrayList = new ArrayList<Vector2f>();
+    		resultArrayList.add(p30);
+    		resultArrayList.add(deriv30);
+    		return resultArrayList;
+    }
     /*
      * Approximate a single segment of a B-spline with a number of vertices, according to 
      * an appropriate criterion for how many are needed.  The points on the curve are written 
