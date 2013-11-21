@@ -22,7 +22,7 @@ public class RevolutionVolume extends TriangleMesh {
     	// Compute the positions, normals, and texture coordinates for the surface
     	// of revolution mesh. Start with the vertices in the DiscreteCurve.
     		int segments = (int) (4 / tolerance);
-    		int nvertices = curve.vertices.length/2;
+    		int nvertices = ((BSpline)curve).getLengthBuffer().length;
     		float angleDelta = 2f * (float) Math.PI / segments;
     		segments++;
     		int numPts = segments * nvertices;
