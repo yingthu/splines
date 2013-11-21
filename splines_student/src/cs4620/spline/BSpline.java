@@ -184,7 +184,7 @@ public class BSpline extends DiscreteCurve {
 			// TODO: Splines Problem 2, Section 4:
         	// Compute Bezier control points for a closed curve. Put the computed vertices
     		// into the vertices ArrayList declared above.
-    		int numSegments = N+1;
+
     		// Computed vertices and derivatives for the segment
     		ArrayList<Vector2f> segPoints = new ArrayList<Vector2f>();
 		ArrayList<Vector2f> segDerivs = new ArrayList<Vector2f>();
@@ -192,60 +192,27 @@ public class BSpline extends DiscreteCurve {
 		vertices.clear();
 		derivs.clear();
 		
-		// add start point
-		/*
-		vertices.add(cp.get(0));
-		Vector2f d0 = new Vector2f();
-		d0.sub(cp.get(1),cp.get(0));
-		d0.normalize();
-		derivs.add(d0);
-		*/
-		// Segment 0
-		segPoints.clear();
-		segDerivs.clear();	
-		/*
-		bspPoints[1] = cp.get(0);
-		bspPoints[2] = cp.get(1);
-		bspPoints[3] = cp.get(2);
-        Vector2f bspZero = new Vector2f(2.0f * bspPoints[1].x - bspPoints[2].x, 2.0f * bspPoints[1].y - bspPoints[2].y);
-		bspPoints[0] = bspZero;
-		tessellate_bspline(bspPoints, epsilon, segPoints, segDerivs);
-		vertices.addAll(segPoints);
-		derivs.addAll(segDerivs);
-		*/
-		// Segments 1 to N-3
-    		for (int i = 1; i <= numSegments; i++)
+		// Segments 0 to N-1
+    		for (int i = 0; i <= N-1; i++)
     		{
     			segPoints.clear();
     			segDerivs.clear();
-    			bspPoints[0] = cp.get((i-1)%N);
-    			bspPoints[1] = cp.get((i)%N);
-    			bspPoints[2] = cp.get((i+1)%N);
-    			bspPoints[3] = cp.get((i+2)%N);
+
+    			if (i == 0)
+    				bspPoints[0] = cp.get(N-1);
+    			else
+    				bspPoints[0] = cp.get((i-1) % N);
+    			bspPoints[1] = cp.get(i % N);
+    			bspPoints[2] = cp.get((i+1) % N);
+    			bspPoints[3] = cp.get((i+2) % N);
     			tessellate_bspline(bspPoints, epsilon, segPoints, segDerivs);
     			vertices.addAll(segPoints);
     			derivs.addAll(segDerivs);
     		}
-    		// Segment N-2
-    		/*
-    		segPoints.clear();
-    		segDerivs.clear();
-    		bspPoints[0] = cp.get(N-3);
-    		bspPoints[1] = cp.get(N-2);
-    		bspPoints[2] = cp.get(N-1);
-        Vector2f bspThree = new Vector2f(2f * bspPoints[2].x - 1f * bspPoints[1].x, 2f * bspPoints[2].y - 1f * bspPoints[1].y);
-    		bspPoints[3] = bspThree;
-    		tessellate_bspline(bspPoints, epsilon, segPoints, segDerivs);
-    		vertices.addAll(segPoints);
-    		derivs.addAll(segDerivs);
-
-    		// add end point
-    		vertices.add(cp.get(N-1));
-    		Vector2f d1 = new Vector2f();
-    		d1.sub(cp.get(N-1),cp.get(N-2));
-    		d1.normalize();
-    		derivs.add(d1);
-    		*/
+    		// connect the end to the start
+    		vertices.add(vertices.get(0));
+    		derivs.add(derivs.get(0));
+    		
     	} else {
 			// TODO: Splines Problem 1, Section 3.1:
         	// Compute Bezier control points for an open curve with boundary conditions.
@@ -335,9 +302,6 @@ public class BSpline extends DiscreteCurve {
         		flat_normals[2*i] = -1.0f * derivs.get(i).y;
         		flat_normals[2*i+1] = derivs.get(i).x;
         }
-        for (int i = 0; i < nvertices; i++) {
-			length_buffer[i] = length_buffer[i]/totLength;
-		}
         // TODO: PPA2 Problem 3, Section 5.1:
 	    // Compute the 'normalized' total length values.
 	
