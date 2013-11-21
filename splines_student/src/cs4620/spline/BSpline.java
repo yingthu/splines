@@ -79,30 +79,10 @@ public class BSpline extends DiscreteCurve {
     public void tessellate_bezier(Vector2f cp[], float epsilon, ArrayList<Vector2f> outPoints, ArrayList<Vector2f> outDerivs) {
     	 	
     	// TODO (Splines P1): Tesselate a bezier segment
-    	    System.out.println("1 called");
-        bezier_helper(cp, epsilon, outPoints, outDerivs, 0);
-        outPoints.add(0, cp[0]);
-	    /*
-    		Vector2f p10 = new Vector2f();
-    		Vector2f p11 = new Vector2f();
-    		Vector2f p12 = new Vector2f();
-    		Vector2f p20 = new Vector2f();
-    		Vector2f p21 = new Vector2f();
-    		Vector2f p30 = new Vector2f();
-    		p10.interpolate(cp[0], cp[1], 0.5f);
-    		p11.interpolate(cp[1], cp[2], 0.5f);
-    		p12.interpolate(cp[2], cp[3], 0.5f);
-    		p20.interpolate(p10, p11, 0.5f);
-    		p21.interpolate(p11, p12, 0.5f);
-    		p30.interpolate(p20, p21, 0.5f);
-    		outPoints.add(p30);
-    		Vector2f deriv30 = new Vector2f();
-    		deriv30.sub(cp[2], cp[1]);
-    		outDerivs.add(deriv30);
-    		*/
+        bezier_helper(cp, epsilon, outPoints, outDerivs, 1);
     }
     
-    public ArrayList<Vector2f> bezier_helper(Vector2f cp[], float epsilon, ArrayList<Vector2f> outPoints, ArrayList<Vector2f> outDerivs, int level) {
+    public void bezier_helper(Vector2f cp[], float epsilon, ArrayList<Vector2f> outPoints, ArrayList<Vector2f> outDerivs, int level) {
     		float angle1 = 10, angle2 = 10;
     		Vector2f p10 = new Vector2f();
     		Vector2f p11 = new Vector2f();
@@ -118,36 +98,29 @@ public class BSpline extends DiscreteCurve {
     		p30.interpolate(p20, p21, 0.5f);
     		Vector2f deriv30 = new Vector2f();
     		deriv30.sub(cp[2], cp[1]);
-    		if (!((angle1 < epsilon/2.0f && angle2 < epsilon/2.0f) || level > 9)) {
+    		deriv30.normalize();
+    		if (level <= 4) {
     			// left
     		    Vector2f cp_left[] = new Vector2f[4];
     		    cp_left[0] = cp[0];
     		    cp_left[1] = p10;
     		    cp_left[2] = p20;
     		    cp_left[3] = p30;
-    		    ArrayList<Vector2f>left_result = bezier_helper(cp_left, epsilon, outPoints, outDerivs, level+1);
-    			outPoints.add(left_result.get(0));
-    			outDerivs.add(left_result.get(1));
+    		    bezier_helper(cp_left, epsilon, outPoints, outDerivs, level+1);
     			
+    			// self
+    			outPoints.add(p30);
+    			outDerivs.add(deriv30);
+    			System.out.println(p30.toString());
     			// right
     			Vector2f cp_right[] = new Vector2f[4];
     		    cp_right[0] = p30;
     		    cp_right[1] = p21;
     		    cp_right[2] = p12;
     		    cp_right[3] = cp[3];
-    		    ArrayList<Vector2f>right_result = bezier_helper(cp_left, epsilon, outPoints, outDerivs, level+1);
-    			outPoints.add(right_result.get(0));
-    			outDerivs.add(right_result.get(1));
+    		    bezier_helper(cp_right, epsilon, outPoints, outDerivs, level+1);
     			
-    			// self
-    			outPoints.add(p30);
-    			outDerivs.add(deriv30);
     		}
-    		
-    		ArrayList<Vector2f> resultArrayList = new ArrayList<Vector2f>();
-    		resultArrayList.add(p30);
-    		resultArrayList.add(deriv30);
-    		return resultArrayList;
     }
     /*
      * Approximate a single segment of a B-spline with a number of vertices, according to 
@@ -198,16 +171,17 @@ public class BSpline extends DiscreteCurve {
     		ArrayList<Vector2f> segPoints = new ArrayList<Vector2f>();
 		ArrayList<Vector2f> segDerivs = new ArrayList<Vector2f>();
 		
-		Vector2f p0 = cp.get(0);
-		Vector2f p1 = cp.get(1);
-		Vector2f pN_1 = cp.get(N-1);
-		Vector2f pN_2 = cp.get(N-2);
-		Vector2f p0p1 = new Vector2f();
-		Vector2f pN_2pN_1 = new Vector2f();
-		p0p1.sub(p1, p0);
-		pN_2pN_1.sub(pN_1, pN_2);
-		vertices.add(p0);
-		derivs.add(p0p1);
+		vertices.clear();
+		segPoints.clear();
+		segDerivs.clear();
+		bspPoints[0].x = 2.0f * cp.get(0).x - cp.get(1).x;
+		bspPoints[0].y = 2.0f * cp.get(0).y - cp.get(1).y;
+		bspPoints[1] = cp.get(0);
+		bspPoints[2] = cp.get(1);
+		bspPoints[3] = cp.get(2);
+		tessellate_bspline(bspPoints, epsilon, segPoints, segDerivs);
+		vertices.addAll(segPoints);
+		derivs.addAll(segDerivs);
 		
     		for (int i = 1; i <= numSegments; i++)
     		{
@@ -222,15 +196,23 @@ public class BSpline extends DiscreteCurve {
     			derivs.addAll(segDerivs);
     		}
     		
-    		vertices.add(pN_1);
-    		derivs.add(pN_2pN_1);
+    		segPoints.clear();
+    		segDerivs.clear();
+    		bspPoints[0] = cp.get(N-3);
+    		bspPoints[1] = cp.get(N-2);
+    		bspPoints[2] = cp.get(N-1);
+    		bspPoints[3].x = 0.2f * cp.get(N-2).x + 0.8f * cp.get(N-1).x;
+    		bspPoints[3].y = 0.2f * cp.get(N-2).y + 0.8f * cp.get(N-1).y;
+    		tessellate_bspline(bspPoints, epsilon, segPoints, segDerivs);
+    		vertices.addAll(segPoints);
+    		derivs.addAll(segDerivs);
     		
     	}
     	float[] flat_vertices = new float[2 * vertices.size()];
     	float[] flat_normals = new float[2 * vertices.size()];
 
         // TODO Splines Problem 1 and 2: Copy the vertices and normals into the flat arrays
-            
+        
         int nvertices = vertices.size();
         length_buffer = new float[nvertices];
         totLength = 0.0f;
