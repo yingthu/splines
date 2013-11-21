@@ -189,6 +189,11 @@ public class BSpline extends DiscreteCurve {
 		
 		vertices.clear();
 		derivs.clear();
+		vertices.add(cp.get(0));
+		Vector2f d0 = new Vector2f();
+		d0.sub(cp.get(1),cp.get(0));
+		d0.normalize();
+		derivs.add(d0);
 		// Segment 0
 		segPoints.clear();
 		segDerivs.clear();
@@ -231,7 +236,11 @@ public class BSpline extends DiscreteCurve {
     		vertices.addAll(segPoints);
     		derivs.addAll(segDerivs);
 
-
+    		vertices.add(cp.get(N-1));
+    		Vector2f d1 = new Vector2f();
+    		d1.sub(cp.get(N-1),cp.get(N-2));
+    		d1.normalize();
+    		derivs.add(d1);
     	}
     	float[] flat_vertices = new float[2 * vertices.size()];
     	float[] flat_normals = new float[2 * vertices.size()];

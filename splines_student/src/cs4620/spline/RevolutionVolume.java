@@ -29,7 +29,7 @@ public class RevolutionVolume extends TriangleMesh {
     		float[] positions = new float[numPts*3];
     		float[] normals = new float[numPts*3];
     		float[] texCoords = new float[numPts*2];
-    		int[] triangles = new int[(segments-1)*(nvertices-1)*6];
+    		int[] triangles = new int[(segments-1)*(nvertices)*6];
     		
     		float angle = 0;
     		int triangleIdx = 0;
