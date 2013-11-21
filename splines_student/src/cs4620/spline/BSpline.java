@@ -79,6 +79,22 @@ public class BSpline extends DiscreteCurve {
     public void tessellate_bezier(Vector2f cp[], float epsilon, ArrayList<Vector2f> outPoints, ArrayList<Vector2f> outDerivs) {
     	 	
     	// TODO (Splines P1): Tesselate a bezier segment
+    		Vector2f p10 = new Vector2f();
+    		Vector2f p11 = new Vector2f();
+    		Vector2f p12 = new Vector2f();
+    		Vector2f p20 = new Vector2f();
+    		Vector2f p21 = new Vector2f();
+    		Vector2f p30 = new Vector2f();
+    		p10.interpolate(cp[0], cp[1], 0.5f);
+    		p11.interpolate(cp[1], cp[2], 0.5f);
+    		p12.interpolate(cp[2], cp[3], 0.5f);
+    		p20.interpolate(p10, p11, 0.5f);
+    		p21.interpolate(p11, p12, 0.5f);
+    		p30.interpolate(p20, p21, 0.5f);
+    		outPoints.add(p30);
+    		Vector2f deriv30 = new Vector2f();
+    		deriv30.sub(cp[2], cp[1]);
+    		outDerivs.add(deriv30);
     }
     
     
@@ -92,6 +108,15 @@ public class BSpline extends DiscreteCurve {
     	// Strategy: convert the B-spline segment to a Bezier segment, then approximate that.
     	// TODO (Splines P1): Convert the B-spline control points to control points for an equivalent
     	// Bezier segment, then tesselate that segment, using the tesselate_bezier function.
+    		bezPoints[0].x = (bspPoints[0].x + 4.0f * bspPoints[1].x + bspPoints[2].x) / 6.0f;
+    		bezPoints[0].y = (bspPoints[0].y + 4.0f * bspPoints[1].y + bspPoints[2].y) / 6.0f;
+    		bezPoints[1].x = (4.0f * bspPoints[1].x + 2.0f * bspPoints[2].x) / 6.0f;
+    		bezPoints[1].y = (4.0f * bspPoints[1].y + 2.0f * bspPoints[2].y) / 6.0f;
+    		bezPoints[2].x = (2.0f * bspPoints[1].x + 4.0f * bspPoints[2].x) / 6.0f;
+    		bezPoints[2].y = (2.0f * bspPoints[1].y + 4.0f * bspPoints[2].y) / 6.0f;
+    		bezPoints[3].x = (bspPoints[1].x + 4.0f * bspPoints[2].x + bspPoints[3].x) / 6.0f;
+    		bezPoints[3].y = (bspPoints[1].y + 4.0f * bspPoints[2].y + bspPoints[3].y) / 6.0f;
+    		tessellate_bezier(bezPoints, epsilon, outPoints, outDerivs);
     }
     
     @Override
@@ -104,7 +129,8 @@ public class BSpline extends DiscreteCurve {
     	
     	// Use the vertices array list to store your computed vertices
     	ArrayList<Vector2f> vertices = new ArrayList<Vector2f>();
-    	
+    	// Computed derivatives for the spline
+    	ArrayList<Vector2f> derivs = new ArrayList<Vector2f>();
     	
     	// For each segment of the spline, call tesselate_bspline to add its points
     	if (isClosed) {
@@ -115,6 +141,39 @@ public class BSpline extends DiscreteCurve {
 			// TODO: Splines Problem 1, Section 3.1:
         	// Compute Bezier control points for an open curve with boundary conditions.
     		// Put the computed vertices into the vertices ArrayList declared above.
+    		// Number of interior segments
+    		int numSegments = N - 3;
+    		// Computed vertices and derivatives for the segment
+    		ArrayList<Vector2f> segPoints = new ArrayList<Vector2f>();
+		ArrayList<Vector2f> segDerivs = new ArrayList<Vector2f>();
+		
+		Vector2f p0 = cp.get(0);
+		Vector2f p1 = cp.get(1);
+		Vector2f pN_1 = cp.get(N-1);
+		Vector2f pN_2 = cp.get(N-2);
+		Vector2f p0p1 = new Vector2f();
+		Vector2f pN_2pN_1 = new Vector2f();
+		p0p1.sub(p1, p0);
+		pN_2pN_1.sub(pN_1, pN_2);
+		vertices.add(p0);
+		derivs.add(p0p1);
+		
+    		for (int i = 1; i <= numSegments; i++)
+    		{
+    			segPoints.clear();
+    			segDerivs.clear();
+    			bspPoints[0] = cp.get(i-1);
+    			bspPoints[1] = cp.get(i);
+    			bspPoints[2] = cp.get(i+1);
+    			bspPoints[3] = cp.get(i+2);
+    			tessellate_bspline(bspPoints, epsilon, segPoints, segDerivs);
+    			vertices.addAll(segPoints);
+    			derivs.addAll(segDerivs);
+    		}
+    		
+    		vertices.add(pN_1);
+    		derivs.add(pN_2pN_1);
+    		
     	}
     	float[] flat_vertices = new float[2 * vertices.size()];
     	float[] flat_normals = new float[2 * vertices.size()];
@@ -124,7 +183,13 @@ public class BSpline extends DiscreteCurve {
         int nvertices = vertices.size();
         length_buffer = new float[nvertices];
         totLength = 0.0f;
-  
+        for (int i = 0; i < nvertices; i++)
+        {
+        		flat_vertices[2*i] = vertices.get(i).x;
+        		flat_vertices[2*i+1] = vertices.get(i).y;
+        		flat_normals[2*i] = -1.0f * derivs.get(i).y;
+        		flat_normals[2*i+1] = derivs.get(i).x;
+        }
         // TODO: PPA2 Problem 3, Section 5.1:
 	    // Compute the 'normalized' total length values.
 	
