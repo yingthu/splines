@@ -12,6 +12,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Iterator;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
@@ -159,7 +161,7 @@ class SolarSystemAnimatorP3 extends SceneTraverser
 	{
 		// TODO (Manipulators P3): Initialize scene by loading your solar system from Problem 2.
 		try {
-			scene.load(gl, "data/scenes/manip/solar_system.txt");
+			scene.load(gl, "data/scenes/manip/solar_system_2.txt");
 		} catch (IOException e) {
 			System.err.println("FAIL: loading house scene");
 			e.printStackTrace();
@@ -201,7 +203,18 @@ class SolarSystemAnimatorP3 extends SceneTraverser
 		// time, and use the calculated spline offset to update the child nodes.
 		// Note that the time for the solar system is set between 0 and 360, but for splines
 		// it works better to normalize it to [0, 1].
-		
+		if (node.getName().equals("Spline"))
+		{
+			float splineTime = time*1.0f/360.0f;
+			SplineNode splineNode = (SplineNode)node;
+			splineNode.setTime(splineTime);
+			Enumeration<SceneNode> childEnum = splineNode.children();
+			while (childEnum.hasMoreElements()) {
+//				System.out.println("Spline Offset is "+splineNode.splineOffset.toString());
+				SceneNode sceneNode = (SceneNode) childEnum.nextElement();
+				sceneNode.translation.set(splineNode.splineOffset.x, splineNode.splineOffset.y, splineNode.splineOffset.z);
+			}	
+		}
 	}
 }
 

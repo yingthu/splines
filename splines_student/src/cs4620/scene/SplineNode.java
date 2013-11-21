@@ -56,6 +56,28 @@ public class SplineNode extends MeshNode {
 		// TODO: PPA2 Problem 3, Section 5.2:
 		// Accounting for speed, do a binary search for time over the 'normalized'
 		// lengths array and set the splineOffset to the closest position in time.
+		
+		BSpline b = ((Spline) getMesh()).getBspline();
+		
+		if(t == 0) {
+			splineOffset.set(b.vertices[0], b.vertices[1], 0);
+			return;
+		}
+		//We do not make the simplifying assumption that when t = 1, 
+		//we can just use the endpoints of the spline
+		//because if t is not an integer, this will not be true.
+		
+		float position = t*speed;
+		float[] l = b.getLengthBuffer();
+		
+		int i = Arrays.binarySearch(l, position);
+		if(i >= 0) {
+			splineOffset.set(b.vertices[2*i], b.vertices[2*i+1], 0);
+		} else {
+			i = -i + 1;
+			splineOffset.set(b.vertices[2*i], b.vertices[2*i+1], 0);
+		}
+		System.out.println("Number is"+i+" Total Number is: "+b.vertices.length);
 	}
 
 	public static SceneNode fromYamlObject(GL2 gl, Object yamlObject)
