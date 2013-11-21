@@ -82,7 +82,11 @@ public class BSpline extends DiscreteCurve {
         bezier_helper(cp, epsilon, outPoints, outDerivs, 1);
     }
     
+    /*
+     * The helper function for recursive tessellate_bezier, level added for control
+     */
     public void bezier_helper(Vector2f cp[], float epsilon, ArrayList<Vector2f> outPoints, ArrayList<Vector2f> outDerivs, int level) {
+    		// compute the angle1 & angle2 as constraints
     		float angle1 = 0.0f, angle2 = 0.0f;
     		Vector2f p0p1 = new Vector2f();
     		Vector2f p1p2 = new Vector2f();
@@ -100,6 +104,7 @@ public class BSpline extends DiscreteCurve {
     		angle1 = Math.abs(angle1);
     		angle2 = Math.abs(angle2);
     		
+    		// apply de casteljau algorithm
     		Vector2f p10 = new Vector2f();
     		Vector2f p11 = new Vector2f();
     		Vector2f p12 = new Vector2f();
@@ -115,8 +120,10 @@ public class BSpline extends DiscreteCurve {
     		Vector2f deriv30 = new Vector2f();
     		deriv30.sub(p21, p20);
     		deriv30.normalize();
+    		
+    		// add constraints for the recursive algorithm
     		if (!(level > 10 || (angle1 < epsilon/2f && angle2 < epsilon/2f))) {
-    			// left
+    			// left half
     		    Vector2f cp_left[] = new Vector2f[4];
     		    cp_left[0] = cp[0];
     		    cp_left[1] = p10;
@@ -127,15 +134,14 @@ public class BSpline extends DiscreteCurve {
     			// self
     			outPoints.add(p30);
     			outDerivs.add(deriv30);
-    			//System.out.println(p30.toString());
-    			// right
+    			
+    			// right half
     			Vector2f cp_right[] = new Vector2f[4];
     		    cp_right[0] = p30;
     		    cp_right[1] = p21;
     		    cp_right[2] = p12;
     		    cp_right[3] = cp[3];
     		    bezier_helper(cp_right, epsilon, outPoints, outDerivs, level+1);
-    			
     		}
     }
     /*
@@ -148,6 +154,7 @@ public class BSpline extends DiscreteCurve {
     	// Strategy: convert the B-spline segment to a Bezier segment, then approximate that.
     	// TODO (Splines P1): Convert the B-spline control points to control points for an equivalent
     	// Bezier segment, then tesselate that segment, using the tesselate_bezier function.
+    		// convert bspline control points to bezier control points
     		bezPoints[0].x = (bspPoints[0].x + 4.0f * bspPoints[1].x + bspPoints[2].x) / 6.0f;
     		bezPoints[0].y = (bspPoints[0].y + 4.0f * bspPoints[1].y + bspPoints[2].y) / 6.0f;
     		bezPoints[1].x = (4.0f * bspPoints[1].x + 2.0f * bspPoints[2].x) / 6.0f;
@@ -189,26 +196,26 @@ public class BSpline extends DiscreteCurve {
 		
 		vertices.clear();
 		derivs.clear();
+		
+		// add start point
 		vertices.add(cp.get(0));
 		Vector2f d0 = new Vector2f();
 		d0.sub(cp.get(1),cp.get(0));
 		d0.normalize();
 		derivs.add(d0);
+		
 		// Segment 0
 		segPoints.clear();
-		segDerivs.clear();
-		
+		segDerivs.clear();	
 		bspPoints[1] = cp.get(0);
 		bspPoints[2] = cp.get(1);
 		bspPoints[3] = cp.get(2);
         Vector2f bspZero = new Vector2f(2.0f * bspPoints[1].x - bspPoints[2].x, 2.0f * bspPoints[1].y - bspPoints[2].y);
-
 		bspPoints[0] = bspZero;
-		
 		tessellate_bspline(bspPoints, epsilon, segPoints, segDerivs);
 		vertices.addAll(segPoints);
 		derivs.addAll(segDerivs);
-		// Segment 1 to N-3
+		// Segments 1 to N-3
     		for (int i = 1; i <= numSegments; i++)
     		{
     			segPoints.clear();
@@ -224,18 +231,16 @@ public class BSpline extends DiscreteCurve {
     		// Segment N-2
     		segPoints.clear();
     		segDerivs.clear();
-
     		bspPoints[0] = cp.get(N-3);
     		bspPoints[1] = cp.get(N-2);
     		bspPoints[2] = cp.get(N-1);
         Vector2f bspThree = new Vector2f(2f * bspPoints[2].x - 1f * bspPoints[1].x, 2f * bspPoints[2].y - 1f * bspPoints[1].y);
     		bspPoints[3] = bspThree;
-
     		tessellate_bspline(bspPoints, epsilon, segPoints, segDerivs);
-
     		vertices.addAll(segPoints);
     		derivs.addAll(segDerivs);
 
+    		// add end point
     		vertices.add(cp.get(N-1));
     		Vector2f d1 = new Vector2f();
     		d1.sub(cp.get(N-1),cp.get(N-2));
@@ -248,10 +253,21 @@ public class BSpline extends DiscreteCurve {
         // TODO Splines Problem 1 and 2: Copy the vertices and normals into the flat arrays
         
         int nvertices = vertices.size();
+        // length_buffer saves the length of spline from start point to current point
+        // totLength saves the total length of the spline
         length_buffer = new float[nvertices];
         totLength = 0.0f;
         for (int i = 0; i < nvertices; i++)
         {
+        		// set length_buffer & totLength values
+        		length_buffer[0] = 0f;
+        		if (i > 0)
+        		{
+        			float segLength = distance(vertices.get(i-1), vertices.get(i));
+        			totLength += segLength;
+        			length_buffer[i] = totLength;
+        		}
+        		// save in flat arrays
         		flat_vertices[2*i] = vertices.get(i).x;
         		flat_vertices[2*i+1] = vertices.get(i).y;
         		flat_normals[2*i] = -1.0f * derivs.get(i).y;
