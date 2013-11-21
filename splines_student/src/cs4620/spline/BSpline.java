@@ -83,7 +83,23 @@ public class BSpline extends DiscreteCurve {
     }
     
     public void bezier_helper(Vector2f cp[], float epsilon, ArrayList<Vector2f> outPoints, ArrayList<Vector2f> outDerivs, int level) {
-    		float angle1 = 10, angle2 = 10;
+    		float angle1 = 0.0f, angle2 = 0.0f;
+    		Vector2f p0p1 = new Vector2f();
+    		Vector2f p1p2 = new Vector2f();
+    		Vector2f p2p3 = new Vector2f();
+    		p0p1.sub(cp[1], cp[0]);
+    		p1p2.sub(cp[2], cp[1]);
+    		p2p3.sub(cp[3], cp[2]);
+    		p0p1.normalize();
+    		p1p2.normalize();
+    		p2p3.normalize();
+    		angle1 = p0p1.dot(p1p2);
+    		angle2 = p1p2.dot(p2p3);
+    		angle1 = (float) Math.acos(angle1);
+    		angle2 = (float) Math.acos(angle2);
+    		angle1 = Math.abs(angle1);
+    		angle2 = Math.abs(angle2);
+    		
     		Vector2f p10 = new Vector2f();
     		Vector2f p11 = new Vector2f();
     		Vector2f p12 = new Vector2f();
@@ -97,9 +113,9 @@ public class BSpline extends DiscreteCurve {
     		p21.interpolate(p11, p12, 0.5f);
     		p30.interpolate(p20, p21, 0.5f);
     		Vector2f deriv30 = new Vector2f();
-    		deriv30.sub(cp[2], cp[1]);
+    		deriv30.sub(p21, p20);
     		deriv30.normalize();
-    		if (level <= 9) {
+    		if (!(level > 10 || (angle1 < epsilon/2f && angle2 < epsilon/2f))) {
     			// left
     		    Vector2f cp_left[] = new Vector2f[4];
     		    cp_left[0] = cp[0];
@@ -111,7 +127,7 @@ public class BSpline extends DiscreteCurve {
     			// self
     			outPoints.add(p30);
     			outDerivs.add(deriv30);
-//    			System.out.println(p30.toString());
+    			//System.out.println(p30.toString());
     			// right
     			Vector2f cp_right[] = new Vector2f[4];
     		    cp_right[0] = p30;
@@ -173,6 +189,7 @@ public class BSpline extends DiscreteCurve {
 		
 		vertices.clear();
 		derivs.clear();
+		// Segment 0
 		segPoints.clear();
 		segDerivs.clear();
 		
@@ -186,7 +203,7 @@ public class BSpline extends DiscreteCurve {
 		tessellate_bspline(bspPoints, epsilon, segPoints, segDerivs);
 		vertices.addAll(segPoints);
 		derivs.addAll(segDerivs);
-
+		// Segment 1 to N-3
     		for (int i = 1; i <= numSegments; i++)
     		{
     			segPoints.clear();
@@ -199,7 +216,7 @@ public class BSpline extends DiscreteCurve {
     			vertices.addAll(segPoints);
     			derivs.addAll(segDerivs);
     		}
-
+    		// Segment N-2
     		segPoints.clear();
     		segDerivs.clear();
 
