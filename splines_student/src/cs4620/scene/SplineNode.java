@@ -67,7 +67,7 @@ public class SplineNode extends MeshNode {
 		//we can just use the endpoints of the spline
 		//because if t is not an integer, this will not be true.
 		
-		float position = t*speed;
+		float position = (t*speed) % b.getTotalLength();
 		float[] l = b.getLengthBuffer();
 		
 		int i = Arrays.binarySearch(l, position);
