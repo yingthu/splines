@@ -99,7 +99,7 @@ public class BSpline extends DiscreteCurve {
     		Vector2f deriv30 = new Vector2f();
     		deriv30.sub(cp[2], cp[1]);
     		deriv30.normalize();
-    		if (level <= 4) {
+    		if (level <= 9) {
     			// left
     		    Vector2f cp_left[] = new Vector2f[4];
     		    cp_left[0] = cp[0];
@@ -111,7 +111,7 @@ public class BSpline extends DiscreteCurve {
     			// self
     			outPoints.add(p30);
     			outDerivs.add(deriv30);
-    			System.out.println(p30.toString());
+//    			System.out.println(p30.toString());
     			// right
     			Vector2f cp_right[] = new Vector2f[4];
     		    cp_right[0] = p30;
@@ -172,17 +172,21 @@ public class BSpline extends DiscreteCurve {
 		ArrayList<Vector2f> segDerivs = new ArrayList<Vector2f>();
 		
 		vertices.clear();
+		derivs.clear();
 		segPoints.clear();
 		segDerivs.clear();
-		bspPoints[0].x = 2.0f * cp.get(0).x - cp.get(1).x;
-		bspPoints[0].y = 2.0f * cp.get(0).y - cp.get(1).y;
+		
 		bspPoints[1] = cp.get(0);
 		bspPoints[2] = cp.get(1);
 		bspPoints[3] = cp.get(2);
+        Vector2f bspZero = new Vector2f(2.0f * bspPoints[1].x - bspPoints[2].x, 2.0f * bspPoints[1].y - bspPoints[2].y);
+
+		bspPoints[0] = bspZero;
+		
 		tessellate_bspline(bspPoints, epsilon, segPoints, segDerivs);
 		vertices.addAll(segPoints);
 		derivs.addAll(segDerivs);
-		
+
     		for (int i = 1; i <= numSegments; i++)
     		{
     			segPoints.clear();
@@ -195,18 +199,22 @@ public class BSpline extends DiscreteCurve {
     			vertices.addAll(segPoints);
     			derivs.addAll(segDerivs);
     		}
-    		
+
     		segPoints.clear();
     		segDerivs.clear();
+
     		bspPoints[0] = cp.get(N-3);
     		bspPoints[1] = cp.get(N-2);
     		bspPoints[2] = cp.get(N-1);
-    		bspPoints[3].x = 0.2f * cp.get(N-2).x + 0.8f * cp.get(N-1).x;
-    		bspPoints[3].y = 0.2f * cp.get(N-2).y + 0.8f * cp.get(N-1).y;
+        Vector2f bspThree = new Vector2f(2f * bspPoints[2].x - 1f * bspPoints[1].x, 2f * bspPoints[2].y - 1f * bspPoints[1].y);
+    		bspPoints[3] = bspThree;
+
     		tessellate_bspline(bspPoints, epsilon, segPoints, segDerivs);
+
     		vertices.addAll(segPoints);
     		derivs.addAll(segDerivs);
-    		
+
+
     	}
     	float[] flat_vertices = new float[2 * vertices.size()];
     	float[] flat_normals = new float[2 * vertices.size()];
