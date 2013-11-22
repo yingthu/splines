@@ -58,7 +58,7 @@ public class SplineNode extends MeshNode {
 		// lengths array and set the splineOffset to the closest position in time.
 		
 		BSpline b = ((Spline) getMesh()).getBspline();
-		
+		int bLength = b.getLengthBuffer().length;
 		if(t == 0) {
 			splineOffset.set(b.vertices[0], b.vertices[1], 0);
 			return;
@@ -72,12 +72,15 @@ public class SplineNode extends MeshNode {
 		
 		int i = Arrays.binarySearch(l, position);
 		if(i >= 0) {
+			i = i % bLength;
 			splineOffset.set(b.vertices[2*i], b.vertices[2*i+1], 0);
 		} else {
-			i = -i + 1;
+			//System.out.println("i = " + i);
+			i = (-i + 1) % bLength;
+			//System.out.println("i = " + i + "\n");
 			splineOffset.set(b.vertices[2*i], b.vertices[2*i+1], 0);
 		}
-		System.out.println("Number is"+i+" Total Number is: "+b.vertices.length);
+		//System.out.println("Number is "+i+" Total Number is: "+b.vertices.length/2);
 	}
 
 	public static SceneNode fromYamlObject(GL2 gl, Object yamlObject)

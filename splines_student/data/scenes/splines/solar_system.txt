@@ -7,19 +7,19 @@ children:
   name: Sun
   children:
   - translation: [0.0, 0.0, 0.0]
-    rotation: [0.0, 0.0, 0.0]
+    rotation: [0.0, 278.0, 0.0]
     name: EarthGroup
     children:
     - translation: [0.0, 0.0, 2.4]
-      rotation: [0.0, 0.0, 0.0]
+      rotation: [0.0, 139.0, 0.0]
       name: Earth
       children:
       - translation: [0.0, 0.0, 0.0]
-        rotation: [0.0, 0.0, 0.0]
+        rotation: [0.0, 417.0, 0.0]
         name: MoonGroup
         children:
         - translation: [0.0, 0.0, 1.8]
-          rotation: [0.0, 0.0, 0.0]
+          rotation: [0.0, 139.0, 0.0]
           name: Moon
           children:
           - translation: [0.0, 1.5, 0.0]
@@ -30,7 +30,7 @@ children:
             material:
               diffuse: [1.0, 0.0, 0.0, 1.0]
               type: DiffuseMaterial
-              ambient: [0.15, 0.15, 0.15, 1.0]
+              ambient: [0.05, 0.05, 0.05, 1.0]
             mesh: {type: Cylinder}
             scaling: [0.05, 1.0, 0.2]
           - translation: [0.041121602, 2.1, 0.59]
@@ -46,28 +46,32 @@ children:
             scaling: [0.05, 0.4, 0.4]
           type: MeshNode
           material:
-            diffuse: [0.9, 0.8, 0.7, 1.0]
-            type: DiffuseMaterial
-            ambient: [0.15, 0.15, 0.15, 1.0]
+            specular: [0.0, 0.0, 0.0, 1.0]
+            diffuse: [1.0, 1.0, 1.0, 1.0]
+            shininess: 0.0
+            type: MoonMaterial
+            ambient: [0.05, 0.05, 0.05, 1.0]
           mesh: {type: Sphere}
           scaling: [0.3, 0.3, 0.3]
         type: SceneNode
         scaling: [1.0, 1.0, 1.0]
       type: MeshNode
       material:
-        diffuse: [0.0, 0.6, 0.9, 1.0]
-        type: DiffuseMaterial
-        ambient: [0.15, 0.15, 0.15, 1.0]
+        specular: [0.0, 0.0, 0.0, 1.0]
+        diffuse: [1.0, 1.0, 1.0, 1.0]
+        shininess: 0.0
+        type: EarthMaterial
+        ambient: [0.05, 0.05, 0.05, 1.0]
       mesh: {type: Sphere}
       scaling: [0.4, 0.4, 0.4]
     type: SceneNode
     scaling: [1.0, 1.0, 1.0]
   - translation: [0.0, 0.0, 0.0]
-    rotation: [0.0, 0.0, 0.0]
+    rotation: [0.0, 139.0, 0.0]
     name: MarsGroup
     children:
     - translation: [0.0, 0.0, 5.0]
-      rotation: [0.0, 0.0, 0.0]
+      rotation: [0.0, 139.0, 0.0]
       name: Mars
       children:
       - translation: [-0.151, 0.946, 0.599]
@@ -78,14 +82,16 @@ children:
         material:
           diffuse: [0.9, 0.0, 0.2, 1.0]
           type: DiffuseMaterial
-          ambient: [0.15, 0.15, 0.15, 1.0]
+          ambient: [0.05, 0.05, 0.05, 1.0]
         mesh: {type: Teapot}
         scaling: [0.527, 0.52655494, 0.52655494]
       type: MeshNode
       material:
-        diffuse: [1.0, 0.3, 0.0, 1.0]
-        type: DiffuseMaterial
-        ambient: [0.15, 0.15, 0.15, 1.0]
+        specular: [0.0, 0.0, 0.0, 1.0]
+        diffuse: [1.0, 1.0, 1.0, 1.0]
+        shininess: 0.0
+        type: MarsMaterial
+        ambient: [0.05, 0.05, 0.05, 1.0]
       mesh: {type: Sphere}
       scaling: [0.3, 0.3, 0.3]
     type: SceneNode
@@ -99,35 +105,38 @@ children:
     ambient: [1.0, 1.0, 1.0, 1.0]
     scaling: [1.0, 1.0, 1.0]
   - translation: [-1.9, 0.0, 0.0]
-    speed: '1.0'
+    speed: '10.0'
     rotation: [0.0, 1.9, 0.0]
     name: Spline
     children:
-    - translation: [1.2484274, 0.9556424, 0.0]
+    - translation: [0.55009747, -0.82001626, 0.0]
       rotation: [0.0, 0.0, 0.0]
-      name: Sphere
+      name: Comet
       children: []
       type: MeshNode
       material:
-        diffuse: [0.9, 0.0, 0.0, 1.0]
-        type: DiffuseMaterial
+        specular: [0.0, 0.0, 0.0, 1.0]
+        diffuse: [0.7, 0.3, 0.3, 1.0]
+        shininess: 0.0
+        type: CometMaterial
         ambient: [0.0, 0.0, 0.0, 1.0]
       mesh: {type: Sphere}
-      scaling: [0.3, 0.3, 0.3]
+      scaling: [0.1, 0.1, 0.1]
     type: SplineNode
     material:
-      specular: [1.0, 1.0, 1.0, 1.0]
+      specular: [0.0, 0.0, 0.0, 1.0]
       diffuse: [0.8, 0.8, 0.0, 1.0]
       shininess: 50.0
-      type: PhongMaterial
+      type: CometMaterial
       ambient: [0.1, 0.1, 0.1, 1.0]
     mesh:
       spline:
-        ctrls: [-1.5, 1.5, 0.48936626, 1.5, 1.5, 1.1360288, 1.5, -1.5, -1.5, -1.5]
+        ctrls: [-1.5, 1.5, 1.5, 1.3427106, -0.54468447, 0.12667082, 1.5, -1.5, -1.5,
+          -1.5]
         closed: 'true'
         type: BSpline
       type: Spline
-    scaling: [2.2, 2.0, 1.0]
+    scaling: [3.0, 2.0, 1.0]
   type: MeshNode
   material:
     scroll_speeds: [1.0, 2.0, 4.0]

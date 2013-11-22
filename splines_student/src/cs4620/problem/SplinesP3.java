@@ -161,7 +161,7 @@ class SolarSystemAnimatorP3 extends SceneTraverser
 	{
 		// TODO (Manipulators P3): Initialize scene by loading your solar system from Problem 2.
 		try {
-			scene.load(gl, "data/scenes/manip/solar_system_2.txt");
+			scene.load(gl, "data/scenes/splines/solar_system.txt");
 		} catch (IOException e) {
 			System.err.println("FAIL: loading house scene");
 			e.printStackTrace();
