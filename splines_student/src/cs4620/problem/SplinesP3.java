@@ -163,7 +163,7 @@ class SolarSystemAnimatorP3 extends SceneTraverser
 		try {
 			scene.load(gl, "data/scenes/splines/solar_system.txt");
 		} catch (IOException e) {
-			System.err.println("FAIL: loading house scene");
+			System.err.println("FAIL: loading solar system scene");
 			e.printStackTrace();
 		}
 	}
